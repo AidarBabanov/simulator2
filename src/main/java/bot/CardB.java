@@ -8,6 +8,7 @@ public class CardB {
     private int manaCost;
     private String name;
     private String description;
+    private boolean used;
 
     public CardB(JsonObject jsonCard){
         int baseManaCost = jsonCard.get("baseManaCost").getAsInt();
@@ -43,7 +44,7 @@ public class CardB {
         this.description = description;
     }
 
-    public static CardB createCardFromJson(Player player, JsonObject jsonCard) {
+    public static CardB createCardFromJson(JsonObject jsonCard) {
         CardB card = null;
         String cardType = jsonCard.get("type").getAsString();
         switch (cardType) {
@@ -53,7 +54,18 @@ public class CardB {
             case "SPELL":
                 card = new SpellB(jsonCard);
                 break;
+            case "HERO_POWER":
+                card = new SpellB(jsonCard);
+                break;
         }
         return card;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 }

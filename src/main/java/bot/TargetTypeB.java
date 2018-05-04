@@ -8,16 +8,31 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return false;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
     CHARACTER {
         @Override
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
     MINION {
         @Override
         public boolean hitsEnemyHero() {
+            return false;
+        }
+
+        @Override
+        public boolean isAOE() {
             return false;
         }
     },
@@ -26,6 +41,11 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
 
     ENEMY_CHARACTER {
@@ -33,10 +53,20 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
     ENEMY_MINION {
         @Override
         public boolean hitsEnemyHero() {
+            return false;
+        }
+
+        @Override
+        public boolean isAOE() {
             return false;
         }
     },
@@ -45,11 +75,21 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
 
     YOUR_CHARACTER {
         @Override
         public boolean hitsEnemyHero() {
+            return false;
+        }
+
+        @Override
+        public boolean isAOE() {
             return false;
         }
     },
@@ -58,10 +98,20 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return false;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
     YOUR_HERO {
         @Override
         public boolean hitsEnemyHero() {
+            return false;
+        }
+
+        @Override
+        public boolean isAOE() {
             return false;
         }
     },
@@ -71,11 +121,21 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return true;
+        }
     },
     ALL_MINIONS {
         @Override
         public boolean hitsEnemyHero() {
             return false;
+        }
+
+        @Override
+        public boolean isAOE() {
+            return true;
         }
     },
 
@@ -84,11 +144,21 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return true;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     },
 
     ENEMY_CHARACTERS {
         @Override
         public boolean hitsEnemyHero() {
+            return true;
+        }
+
+        @Override
+        public boolean isAOE() {
             return true;
         }
     },
@@ -97,11 +167,21 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return false;
         }
+
+        @Override
+        public boolean isAOE() {
+            return true;
+        }
     },
 
     YOUR_CHARACTERS {
         @Override
         public boolean hitsEnemyHero() {
+            return false;
+        }
+
+        @Override
+        public boolean isAOE() {
             return false;
         }
     },
@@ -110,9 +190,15 @@ public enum TargetTypeB {
         public boolean hitsEnemyHero() {
             return false;
         }
+
+        @Override
+        public boolean isAOE() {
+            return false;
+        }
     };
 
     public abstract boolean hitsEnemyHero();
+    public abstract boolean isAOE();
 
     public static TargetTypeB defineTarget(JsonObject jsonEffect) {
         TargetTypeB targetType = null;
@@ -167,6 +253,5 @@ public enum TargetTypeB {
                 break;
         }
         return targetType;
-
     }
 }

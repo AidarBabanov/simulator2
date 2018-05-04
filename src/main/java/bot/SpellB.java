@@ -3,7 +3,7 @@ package bot;
 import bot.spells.SpellEffectB;
 import com.google.gson.JsonObject;
 
-public class SpellB extends CardB {
+public class SpellB extends CardB implements SimpleBot.DirectDamageCard {
 
     private SpellEffectB spellEffect;
 
@@ -32,4 +32,5 @@ public class SpellB extends CardB {
     public int getDamage() {
         return spellEffect.getDamage();
     }
+
 }

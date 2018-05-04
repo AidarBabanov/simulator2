@@ -1,6 +1,7 @@
 package bot;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.LinkedList;
@@ -18,19 +19,28 @@ public class GameStateB {
     private List<CardB> myHand;
 
     public GameStateB(JsonObject jsonState) {
-        String manaCrystals = jsonState.get("currentManaCrystals").getAsString();
+        int manaCrystals = jsonState.get("currentManaCrystals").getAsInt();
         JsonObject jsonMyHero = jsonState.get("hero").getAsJsonObject();
         JsonObject jsonOpponentHero = jsonState.get("opponentHero").getAsJsonObject();
         JsonArray jsonMyTable = jsonState.get("table").getAsJsonObject().get("cards").getAsJsonArray();
         JsonArray jsonOpponentTable = jsonState.get("opponentTable").getAsJsonObject().get("cards").getAsJsonArray();
         JsonArray jsonMyHand = jsonState.get("hand").getAsJsonObject().get("cards").getAsJsonArray();
 
+        this.setMe(new HeroB(jsonMyHero));
+        this.setOpponent(new HeroB(jsonOpponentHero));
+        this.setMyTable(createNewListFromJson(jsonMyTable, MinionB.class));
+        this.setOpponentTable(createNewListFromJson(jsonOpponentTable, MinionB.class));
+        this.setMyHand(createNewListFromJson(jsonMyHand, CardB.class));
+        this.setManaCrystals(manaCrystals);
+    }
 
-        this.setMe(new HeroB());
-        this.setOpponent(new HeroB());
-        this.setMyTable(new LinkedList<>());
-        this.setOpponentTable(new LinkedList<>());
-        this.setMyHand(new LinkedList<>());
+    public <T extends CardB> List<T> createNewListFromJson(JsonArray jsonArray, Class<T> type) {
+        List<T> result = new LinkedList<>();
+        for (JsonElement jsonCard : jsonArray) {
+            CardB cardB = CardB.createCardFromJson(jsonCard.getAsJsonObject());
+            result.add((T) cardB);
+        }
+        return result;
     }
 
     public HeroB getMe() {

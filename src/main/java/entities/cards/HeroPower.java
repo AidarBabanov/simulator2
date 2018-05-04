@@ -5,6 +5,7 @@ import player.Player;
 import spellEffects.SpellEffect;
 
 public class HeroPower extends Card {
+    private String name;
     private SpellEffect spellEffect;
     private String description;
     private Player player;
@@ -12,6 +13,7 @@ public class HeroPower extends Card {
     public HeroPower(Player player, JsonObject jsonCard) {
         this.setPlayer(player);
         this.setDescription(jsonCard.get("description").getAsString());
+        this.setName(jsonCard.get("name").getAsString());
         this.setBaseManacost(jsonCard.get("baseManaCost").getAsInt());
         this.setCurrentManacost(this.getBaseManacost());
         JsonObject jsonSpellEffect = jsonCard.get("spell").getAsJsonObject();
@@ -31,10 +33,12 @@ public class HeroPower extends Card {
     @Override
     public JsonObject jsonStateInformation() {
         JsonObject jsonHeroPower = new JsonObject();
-        jsonHeroPower.addProperty("type", "heroPower");
+        jsonHeroPower.addProperty("type", "HERO_POWER");
         jsonHeroPower.addProperty("baseManaCost", this.getBaseManacost());
         jsonHeroPower.addProperty("currentManaCost", this.getCurrentManacost());
         jsonHeroPower.addProperty("description", this.getDescription());
+        jsonHeroPower.addProperty("name", this.getName());
+        jsonHeroPower.add("spell", spellEffect.jsonStateInformation());
 
         return jsonHeroPower;
     }
@@ -60,5 +64,15 @@ public class HeroPower extends Card {
     @Override
     public String toString() {
         return this.jsonStateInformation().toString();
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 }

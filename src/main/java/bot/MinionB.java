@@ -33,4 +33,5 @@ public class MinionB extends CardB {
     public void setHealth(int health) {
         this.health = health;
     }
+
 }

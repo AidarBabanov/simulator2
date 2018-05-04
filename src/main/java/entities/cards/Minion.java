@@ -103,7 +103,7 @@ public class Minion extends Card implements Target {
 
     public JsonObject jsonStateInformation() {
         JsonObject jsonCard = new JsonObject();
-        jsonCard.addProperty("type", "minion");
+        jsonCard.addProperty("type", "MINION");
         jsonCard.addProperty("name", super.getName());
         jsonCard.addProperty("baseManaCost", super.getBaseManacost());
         jsonCard.addProperty("currentManaCost", super.getCurrentManacost());

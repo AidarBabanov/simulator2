@@ -34,7 +34,7 @@ public class Spell extends Card {
     @Override
     public JsonObject jsonStateInformation() {
         JsonObject jsonCard = new JsonObject();
-        jsonCard.addProperty("type", "spell");
+        jsonCard.addProperty("type", "SPELL");
         jsonCard.addProperty("name", super.getName());
         jsonCard.addProperty("baseManaCost", super.getBaseManacost());
         jsonCard.addProperty("currentManaCost", super.getCurrentManacost());

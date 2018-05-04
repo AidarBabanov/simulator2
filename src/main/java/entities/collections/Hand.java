@@ -17,7 +17,6 @@ public class Hand extends LinkedList<Card> {
 
     public void playCard() {
     }
-
     public void drawCard() {
         Card drawnCard = this.getPlayer().getDeck().drawCard();
         if (this.size() <= 10) this.add(drawnCard);
