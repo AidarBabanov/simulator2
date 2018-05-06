@@ -9,6 +9,7 @@ public class HeroPower extends Card {
     private SpellEffect spellEffect;
     private String description;
     private Player player;
+    private boolean isUsed;
 
     public HeroPower(Player player, JsonObject jsonCard) {
         this.setPlayer(player);
@@ -21,7 +22,11 @@ public class HeroPower extends Card {
     }
 
     public void use() {
+        if (this.isUsed()) {
+            player.write("\"message\": \"hero power is used\"");
+        }
         spellEffect.getArguments(player);
+        this.setUsed(true);
         spellEffect.performAction();
     }
 
@@ -74,5 +79,13 @@ public class HeroPower extends Card {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 }

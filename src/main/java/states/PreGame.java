@@ -78,6 +78,8 @@ public class PreGame implements State {
     private class PreGameMessageHandler implements Player.MessageHandler {
 
         public boolean handle(String message, Player player) {
+            player.getOpponent().write(message);
+
             JsonObject jsonMessage = fromStringToJsonOBJ(message);
             if (!jsonMessage.get("name").getAsString().equals(player.getName())) return false;
             else {

@@ -13,8 +13,8 @@ public class PlayerTurn implements State {
     private PlayerTurnMessageHandler messageHandler;
 
     public PlayerTurn(Player player) {
-            this.setPlayer(player);
-            this.setTurnEnd(false);
+        this.setPlayer(player);
+        this.setTurnEnd(false);
         messageHandler = new PlayerTurnMessageHandler();
     }
 
@@ -22,11 +22,12 @@ public class PlayerTurn implements State {
         player.write(state());
         player.getOpponent().write(state());
 
-        player.setManaCrystals(player.getManaCrystals()+1);
+        player.setManaCrystals(player.getManaCrystals() + 1);
         player.setCurrentManaCrystals(player.getManaCrystals());
 
         player.drawCard();
 
+        player.getHero().getHeroPower().setUsed(false);
 
         for (Minion tableMinion : player.getTable()) {
             tableMinion.setCanAttack(true);
@@ -71,20 +72,22 @@ public class PlayerTurn implements State {
 
     private class PlayerTurnMessageHandler implements Player.MessageHandler {
         public boolean handle(String message, Player player) {
+            player.getOpponent().write(message);
             JsonObject jsonMessage = fromStringToJsonOBJ(message);
             if (!jsonMessage.get("name").getAsString().equals(player.getName())) {
-                return false;}
-            else {
+                return false;
+            } else {
                 if (jsonMessage.get("action").getAsString().equals("playCard")) {
                     int handPosition = jsonMessage.get("handPosition").getAsInt();
-                    if(handPosition>=player.getHand().size())player.write("{\"Message\": \"No card on this position\"}");
+                    if (handPosition >= player.getHand().size())
+                        player.write("{\"Message\": \"no card on this position\"}");
                     else player.playCard(handPosition);
                     return true;
                 }
 
                 if (jsonMessage.get("action").getAsString().equals("attack")) {
                     String source = jsonMessage.get("source").getAsString();
-                    String strTarget = jsonMessage.get("target").getAsString();
+                    String strTarget = jsonMessage.get("targetType").getAsString();
                     Target target = null;
                     int targetPosition;
                     if (strTarget.equals("hero")) target = player.getOpponent().getHero();
@@ -111,7 +114,7 @@ public class PlayerTurn implements State {
                     setTurnEnd(true);
                     return true;
                 }
-                if(jsonMessage.get("action").getAsString().equals("useHeroPower")){
+                if (jsonMessage.get("action").getAsString().equals("useHeroPower")) {
                     player.useHeroPower();
                     return true;
                 }

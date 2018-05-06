@@ -6,13 +6,13 @@ import bot.spells.DamageSpellB;
 import java.util.*;
 
 public class Table {
-    int targetMinionHealth;   //health of minion, which we want to kill, bag weight
-    int targetMinionDamage;   //damage of minion, which we want to kill
-    int mana;           //mana which we can use
-    int rows;
-    int cols;
-    List<TradingElement> elements;
-    Cell[][] table;
+    private int targetMinionHealth;   //health of minion, which we want to kill, bag weight
+    private int targetMinionDamage;   //damage of minion, which we want to kill
+    private int mana;           //mana which we can use
+    private int rows;
+    private int cols;
+    private List<TradingElement> elements;
+    private Cell[][] table;
     private Cell defaultCell;
 
     public Table(GameStateB gameStateB, MinionB minionB) {
@@ -43,13 +43,15 @@ public class Table {
                     }
                 }
             }
-            TradingElement tradingElement = new TradingElement(cardB, minionB.getAttack());
+            TradingElement tradingElement = new TradingElement(cardB, targetMinionDamage);
             totalDamage += tradingElement.damage;
             if (addCard) elements.add(tradingElement);
         }
 
-        for(MinionB minion: gameStateB.getMyTable()){
-            if(!minion.isUsed())elements.add(new TradingElement(minion, targetMinionDamage));
+        elements.add(new TradingElement(gameStateB.getMe().getHeroPowerB(), targetMinionDamage));
+
+        for (MinionB minion : gameStateB.getMyTable()) {
+            if (!minion.isUsed()) elements.add(new TradingElement(minion, targetMinionDamage));
         }
 
         elements.sort(new Comparator<TradingElement>() {
@@ -68,7 +70,6 @@ public class Table {
             table[0][j].prevCell = defaultCell;
         }
     }
-
 
     public List<CardB> getEffectiveList() {
         List<CardB> list = new LinkedList<>();
@@ -103,7 +104,6 @@ public class Table {
                         attacked(i, j);
                     else notAttacked(i, j);
                 } else notAttacked(i, j);
-
             }
         }
     }

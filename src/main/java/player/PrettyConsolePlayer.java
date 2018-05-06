@@ -66,7 +66,7 @@ public class PrettyConsolePlayer extends Player {
                     jsonObject.addProperty("sourcePosition", Integer.parseInt(arrMessage[i++]));
                 }
 
-                jsonObject.addProperty("target", arrMessage[i]);
+                jsonObject.addProperty("targetType", arrMessage[i]);
                 if (arrMessage[i++].equals("minion")) {
                     jsonObject.addProperty("targetPosition", Integer.parseInt(arrMessage[i++]));
                 }

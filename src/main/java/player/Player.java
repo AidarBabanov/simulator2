@@ -26,7 +26,6 @@ public abstract class Player {
     private int currentManaCrystals;
 
 
-
     public Player() {
     }
 
@@ -75,7 +74,11 @@ public abstract class Player {
     }
 
     public void useHeroPower() {
-        getHero().getHeroPower().use();
+        if (this.getManaCrystals() < this.getHero().getHeroPower().getCurrentManacost()) {
+            this.write("\"message\", \"not enough mana\"");
+        } else {
+            this.getHero().getHeroPower().use();
+        }
     }
 
     public void attackWithHero(Target target) {
@@ -203,5 +206,9 @@ public abstract class Player {
 
     public interface MessageHandler {
         boolean handle(String message, Player player);
+    }
+
+    public enum Command {
+
     }
 }

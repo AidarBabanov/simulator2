@@ -53,7 +53,7 @@ public class SimpleBot {
         }
         //end using an aoe spell
 
-        //
+        // start of sort for trading
         List<MinionB> listOfEnemyMinions = new LinkedList<>(gameStateB.getOpponentTable());
         listOfEnemyMinions.sort(new Comparator<MinionB>() {
             @Override
@@ -62,20 +62,75 @@ public class SimpleBot {
                 else return o2.getAttack() - o1.getAttack();
             }
         });
-        //
+        gameStateB.setManaCrystals(gameStateB.getManaCrystals() - effectiveManaCost);
+        // end of sort for trading
 
-        for(MinionB minion: listOfEnemyMinions){
+        //start trading
+        for (MinionB minion : listOfEnemyMinions) {
             Table table = new Table(gameStateB, minion);
             List<CardB> effectiveList = table.getEffectiveList();
+            for (CardB card : effectiveList) {
+                if (card instanceof MinionB && ((MinionB) card).getHealth() <= minion.getAttack()) {
+                    gameStateB.getMyTable().remove(card);
+                }
+                if (card instanceof SpellB) {
+                    gameStateB.getMyHand().remove(card);
+                    gameStateB.setManaCrystals(gameStateB.getManaCrystals() - card.getManaCost());
+                }
+            }
         }
+        //end of trading
 
+        //start playing cards
+        List<MinionB> minionsToPlay = new LinkedList<>();
+        for (CardB card : gameStateB.getMyHand()) {
+            if (card instanceof MinionB) {
+                minionsToPlay.add((MinionB) card);
+            }
+        }
+        //end playing cards
+
+//        playMinions(new LinkedList<MinionB>(), minionsToPlay, 0, 0, 0);
+
+        //start minions to play
+        minionsToPlay.sort(new Comparator<MinionB>() {
+            @Override
+            public int compare(MinionB o1, MinionB o2) {
+                return o2.getStats() - o1.getStats();
+            }
+        });
+
+        List<MinionB> minionsToPlayNew = new LinkedList<>();
+
+        for (MinionB minion : minionsToPlay) {
+            if (gameStateB.getMyTable().size() >= 7) break;
+            if (minion.getManaCost() <= gameStateB.getManaCrystals()) {
+                minionsToPlayNew.add(minion);
+                gameStateB.setManaCrystals(gameStateB.getManaCrystals() - minion.getManaCost());
+            }
+        }
+        minionsToPlay = minionsToPlayNew;
+        //end minions to play
     }
 
     private void attackEnemyHero() {
     }
 
-    private void reduceEnemyDamageAsPossible() {
-    }
+//    private void playMinions(List<MinionB> minionsToPlay, List<MinionB> maxMinionsToPlay, int currentStats, int maxStats, int handIndex) {
+//        if (handIndex >= gameStateB.getMyHand().size()) {
+//            if (currentStats > maxStats) maxMinionsToPlay = new LinkedList<>(minionsToPlay);
+//        } else {
+//            playMinions(minionsToPlay, maxMinionsToPlay, currentStats, maxStats, handIndex + 1);
+//            if (gameStateB.getMyHand().get(handIndex) instanceof MinionB) {
+//                minionsToPlay.add((MinionB) gameStateB.getMyHand().get(handIndex));
+//                playMinions(minionsToPlay, maxMinionsToPlay, currentStats, maxStats, handIndex + 1);
+//                minionsToPlay.remove(minionsToPlay.size() - 1);
+//            }
+//        }
+//    }
+
+//    private void reduceEnemyDamageAsPossible() {
+//    }
 
 //    private int calculateEnemyTotalDamage() {
 //        int totalDamage = 0;

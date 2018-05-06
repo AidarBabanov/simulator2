@@ -39,7 +39,7 @@ public class Minion extends Card implements Target {
     }
 
     public void playCard() {
-        player.write("{\"message\": \"Set minion position\"}");
+        player.write("{\"message\": \"set minion position\"}");
         String message = player.read();
         int position = fromStringToJsonOBJ(message).get("tablePosition").getAsInt();
 
