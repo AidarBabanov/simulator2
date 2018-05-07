@@ -9,6 +9,7 @@ public class PlayCardCommand implements Command {
     public PlayCardCommand(int handPosition) {
         this.setHandPosition(handPosition);
     }
+
     @Override
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();

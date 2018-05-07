@@ -9,7 +9,7 @@ public class AttackCommand implements Command {
     private int sourcePosition;
     private int targetPosition;
 
-    AttackCommand(TargetSource source, int sourcePosition, TargetSource target, int targetPosition) {
+    public AttackCommand(TargetSource source, int sourcePosition, TargetSource target, int targetPosition) {
         this.setSource(source);
         this.setTarget(target);
         this.setSourcePosition(sourcePosition);
@@ -68,7 +68,7 @@ public class AttackCommand implements Command {
         this.targetPosition = targetPosition;
     }
 
-    enum TargetSource {
+    public enum TargetSource {
         HERO, MINION
     }
 }

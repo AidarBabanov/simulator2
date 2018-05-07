@@ -1,9 +1,12 @@
 package bot;
 
+import bot.commands.*;
 import bot.optimalTrading.Table;
 import bot.spells.DamageSpellB;
+import bot.spells.MissilesSpellB;
 import bot.spells.SpellEffectB;
 import com.google.gson.JsonObject;
+import entities.cards.Minion;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -13,8 +16,10 @@ public class SimpleBot {
 
     private GameStateB gameStateB;
     private MaxSpellDamage maxSpellDamage;
+    List<Command> commands;
 
     SimpleBot(JsonObject jsonState) {
+        commands = new LinkedList<>();
         updateState(jsonState);
     }
 
@@ -53,7 +58,12 @@ public class SimpleBot {
         }
         //end using an aoe spell
 
-        // start of sort for trading
+        //add aoe command
+        Command castAOE = new PlayCardCommand(gameStateB.getMyHand().indexOf(effectiveSpell));
+        commands.add(castAOE);
+        //
+
+        //start trading
         List<MinionB> listOfEnemyMinions = new LinkedList<>(gameStateB.getOpponentTable());
         listOfEnemyMinions.sort(new Comparator<MinionB>() {
             @Override
@@ -63,9 +73,8 @@ public class SimpleBot {
             }
         });
         gameStateB.setManaCrystals(gameStateB.getManaCrystals() - effectiveManaCost);
-        // end of sort for trading
 
-        //start trading
+
         for (MinionB minion : listOfEnemyMinions) {
             Table table = new Table(gameStateB, minion);
             List<CardB> effectiveList = table.getEffectiveList();
@@ -78,21 +87,53 @@ public class SimpleBot {
                     gameStateB.setManaCrystals(gameStateB.getManaCrystals() - card.getManaCost());
                 }
             }
+            //add trading command
+            for (CardB card : effectiveList) {
+                if (card instanceof MinionB) {
+                    int sourcePosition = gameStateB.getMyTable().indexOf(card);
+                    int targetPosition = gameStateB.getOpponentTable().indexOf(card);
+                    Command attackEnemyMinion = new AttackCommand(AttackCommand.TargetSource.MINION, sourcePosition, AttackCommand.TargetSource.MINION, targetPosition);
+                    commands.add(attackEnemyMinion);
+                }
+                if (card instanceof SpellB) {
+                    if (((SpellB) card).getSpellEffect() instanceof MissilesSpellB) {
+                        int handPosition = gameStateB.getMyHand().indexOf(card);
+                        Command missileSpell = new PlayCardCommand(handPosition);
+                        commands.add(missileSpell);
+                    } else {
+                        int handPosition = gameStateB.getMyHand().indexOf(card);
+                        int targetPosition = gameStateB.getOpponentTable().indexOf(card);
+                        Command missileSpell = new PlayCardCommand(handPosition);
+                        commands.add(missileSpell);
+                        Command target = new TargetCommand(TargetCommand.TargetSource.MINION, TargetCommand.Owner.OPPONENT, targetPosition);
+                        commands.add(target);
+                    }
+                }
+            }
         }
         //end of trading
 
-        //start playing cards
+        //start attack hero
+        for (MinionB minion : gameStateB.getMyTable()) {
+            if (!minion.isUsed()) {
+                int tablePosition = gameStateB.getMyTable().indexOf(minion);
+                Command attackHero = new AttackCommand(AttackCommand.TargetSource.MINION, tablePosition, AttackCommand.TargetSource.HERO, -1);
+                commands.add(attackHero);
+            }
+        }
+        //end attack hero
+
+        //start minions to play
         List<MinionB> minionsToPlay = new LinkedList<>();
         for (CardB card : gameStateB.getMyHand()) {
             if (card instanceof MinionB) {
                 minionsToPlay.add((MinionB) card);
             }
         }
-        //end playing cards
 
 //        playMinions(new LinkedList<MinionB>(), minionsToPlay, 0, 0, 0);
 
-        //start minions to play
+
         minionsToPlay.sort(new Comparator<MinionB>() {
             @Override
             public int compare(MinionB o1, MinionB o2) {
@@ -110,7 +151,18 @@ public class SimpleBot {
             }
         }
         minionsToPlay = minionsToPlayNew;
+
+        for (MinionB minion : minionsToPlay) {
+            int handPosition = gameStateB.getMyHand().indexOf(minion);
+            int tablePosition = gameStateB.getMyTable().size();
+            Command playMinion = new PlayCardCommand(handPosition);
+            commands.add(playMinion);
+            Command position = new TablePositionCommand(tablePosition);
+            commands.add(position);
+        }
         //end minions to play
+
+        commands.add(new EndCommand());
     }
 
     private void attackEnemyHero() {
@@ -155,23 +207,23 @@ public class SimpleBot {
     }
 
 
-    private int calculateEnemyStats() {
-        int totalStats = 0;
-        List<MinionB> opponentTable = gameStateB.getOpponentTable();
-        for (MinionB minion : opponentTable) {
-            totalStats += minion.getStats();
-        }
-        return totalStats;
-    }
-
-    private int calculateMyStats() {
-        int totalStats = 0;
-        List<MinionB> myTable = gameStateB.getMyTable();
-        for (MinionB minion : myTable) {
-            totalStats += minion.getStats();
-        }
-        return totalStats;
-    }
+//    private int calculateEnemyStats() {
+//        int totalStats = 0;
+//        List<MinionB> opponentTable = gameStateB.getOpponentTable();
+//        for (MinionB minion : opponentTable) {
+//            totalStats += minion.getStats();
+//        }
+//        return totalStats;
+//    }
+//
+//    private int calculateMyStats() {
+//        int totalStats = 0;
+//        List<MinionB> myTable = gameStateB.getMyTable();
+//        for (MinionB minion : myTable) {
+//            totalStats += minion.getStats();
+//        }
+//        return totalStats;
+//    }
 
 
     public GameStateB getGameStateB() {
@@ -209,10 +261,17 @@ public class SimpleBot {
             int manaLeft = getGameStateB().getManaCrystals();
             List<DirectDamageCard> currentSpells = new LinkedList<>();
 
-            if (manaLeft >= gameStateB.getMe().getHeroPowerB().getManaCost()) {
+            calculateMaxSpellDamageHelper(index, manaLeft, currentSpells);
+
+            int manaSpent = 0;
+            for (DirectDamageCard card : currentSpells) {
+                manaSpent += card.getManaCost();
+            }
+
+            if (manaLeft - manaSpent >= gameStateB.getMe().getHeroPowerB().getManaCost()) {
                 currentSpells.add(gameStateB.getMe().getHeroPowerB());
             }
-            calculateMaxSpellDamageHelper(index, manaLeft, currentSpells);
+
         }
 
         private void calculateMaxSpellDamageHelper(int index, int manaLeft, List<DirectDamageCard> currentSpells) {
@@ -251,5 +310,7 @@ public class SimpleBot {
         boolean hitsEnemyHero();
 
         int getDamage();
+
+        int getManaCost();
     }
 }

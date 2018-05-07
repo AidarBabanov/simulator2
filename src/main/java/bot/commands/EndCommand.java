@@ -6,7 +6,7 @@ public class EndCommand implements Command {
     @Override
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("acrtion", "end");
+        jsonObject.addProperty("action", "end");
         return jsonObject;
     }
 

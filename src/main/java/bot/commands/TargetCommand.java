@@ -8,7 +8,7 @@ public class TargetCommand implements Command {
     private int position;
     private Owner owner;
 
-    TargetCommand(TargetSource target, Owner owner, int position){
+    public TargetCommand(TargetSource target, Owner owner, int position){
         this.setTarget(target);
         this.setOwner(owner);
         this.setPosition(position);
@@ -56,11 +56,11 @@ public class TargetCommand implements Command {
         this.owner = owner;
     }
 
-    enum TargetSource {
+    public enum TargetSource {
         HERO, MINION
     }
 
-    enum Owner{
+    public enum Owner{
         ME, OPPONENT
     }
 }
