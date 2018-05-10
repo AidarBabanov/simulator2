@@ -3,6 +3,7 @@ import entities.collections.Deck;
 import entities.collections.Hand;
 import entities.collections.Table;
 import filesystem.FileSystem;
+import player.BotPlayer;
 import player.Player;
 import player.PrettyConsolePlayer;
 import states.PreGame;
@@ -35,8 +36,10 @@ public class Main {
         hero1.setCurrentHealth(1);
         player1.setHero(hero1);
 
-        player2 = new PrettyConsolePlayer();
-        player2.setName("Rocking teacher [Ben]");
+        player2 = new BotPlayer();
+
+//        player2 = new PrettyConsolePlayer();
+//        player2.setName("Rocking teacher [Ben]");
         player2.setHand(new Hand(player2));
 //        Deck deck2 = getDeckFromFile2(player2);
         Deck deck2 = FileSystem.getDeckByName(player2, "custom_deck");

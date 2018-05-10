@@ -9,7 +9,7 @@ public class MinionB extends CardB {
     public MinionB(JsonObject jsonCard) {
         super(jsonCard);
         int baseAttack = jsonCard.get("baseAttack").getAsInt();
-        int baseHealth = jsonCard.get("baseHp").getAsInt();
+        int baseHealth = jsonCard.get("baseHealth").getAsInt();
         this.setAttack(baseAttack);
         this.setHealth(baseHealth);
     }

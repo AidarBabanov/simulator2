@@ -15,22 +15,21 @@ public class Hand extends LinkedList<Card> {
         this.setPlayer(player);
     }
 
-    public void playCard() {
-    }
     public void drawCard() {
         Card drawnCard = this.getPlayer().getDeck().drawCard();
-        if (this.size() <= 10) this.add(drawnCard);
+        if (this.size() < 10) this.add(drawnCard);
         else burnCard(drawnCard);
     }
 
-    public void burnCard(Card card){}
+    public void burnCard(Card card) {
+    }
 
     private int randomHandPosition() {
         Random random = new Random();
         return Math.abs(random.nextInt() % this.size());
     }
 
-    public Card discard(){
+    public Card discard() {
         return this.remove(randomHandPosition());
     }
 
@@ -38,7 +37,7 @@ public class Hand extends LinkedList<Card> {
         JsonObject jsonHand = new JsonObject();
         jsonHand.addProperty("numberOfCards", this.size());
         JsonArray jsonArray = new JsonArray();
-        for(Card card: this){
+        for (Card card : this) {
             jsonArray.add(card.jsonStateInformation());
         }
         jsonHand.add("cards", jsonArray);

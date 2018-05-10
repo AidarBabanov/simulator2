@@ -20,7 +20,7 @@ public class PlayerTurn implements State {
 
     public void performActions() {
         player.write(state());
-        player.getOpponent().write(state());
+//        player.getOpponent().write(state());
 
         player.setManaCrystals(player.getManaCrystals() + 1);
         player.setCurrentManaCrystals(player.getManaCrystals());
@@ -40,10 +40,10 @@ public class PlayerTurn implements State {
             String message = player.read();
             boolean handled = messageHandler.handle(message, player);
             if (!handled) player.write("{\"message\": \"Wrong command!\"}");
-            else {
-                player.write(player.toString());
-                player.getOpponent().write(player.getOpponent().toString());
-            }
+//            else {
+//                player.write(player.toString());
+//                player.getOpponent().write(player.getOpponent().toString());
+//            }
         }
     }
 

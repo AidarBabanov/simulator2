@@ -14,16 +14,16 @@ public abstract class SpellEffectB {
         SpellEffectB spellEffect = null;
         String spellEffectType = jsonEffect.get("class").getAsString();
         switch (spellEffectType) {
-            case "DamageSpellB":
+            case "DamageSpell":
                 spellEffect = new DamageSpellB(jsonEffect);
                 break;
-            case "DrawCardSpellB":
+            case "DrawCardSpell":
                 spellEffect = new DrawCardSpellB(jsonEffect);
                 break;
             case "MissilesSpell":
                 spellEffect = new MissilesSpellB(jsonEffect);
                 break;
-            case "MetaSpellB":
+            case "MetaSpell":
                 spellEffect = new MetaSpellB(jsonEffect);
                 break;
         }

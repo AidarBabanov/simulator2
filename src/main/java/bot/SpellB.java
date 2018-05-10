@@ -15,6 +15,7 @@ public class SpellB extends CardB implements SimpleBot.DirectDamageCard {
 
         this.setName(name);
         this.setSpellEffect(SpellEffectB.defineSpellEffect(jsonSpellEffect));
+
     }
 
     public SpellEffectB getSpellEffect() {

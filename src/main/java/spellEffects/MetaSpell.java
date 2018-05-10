@@ -23,7 +23,7 @@ public class MetaSpell extends SpellEffect {
         JsonArray jsonArray = effect.get("spells").getAsJsonArray();
         for (JsonElement jsonEffect : jsonArray) {
             SpellEffect spellEffect = SpellEffect.defineSpellEffect(jsonEffect.getAsJsonObject());
-            this.spellEffectList.add(spellEffect);
+            if (spellEffect != null) this.spellEffectList.add(spellEffect);
         }
     }
 

@@ -96,6 +96,7 @@ public abstract class Player {
 
     public JsonObject jsonStateInformation() {
         JsonObject jsonPlayer = new JsonObject();
+        jsonPlayer.addProperty("message","stateInfo");
         jsonPlayer.addProperty("name", this.getName());
         jsonPlayer.addProperty("manaCrystals", this.getManaCrystals());
         jsonPlayer.addProperty("currentManaCrystals", this.getCurrentManaCrystals());

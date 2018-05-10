@@ -16,11 +16,11 @@ public class Table {
     private Cell defaultCell;
 
     public Table(GameStateB gameStateB, MinionB minionB) {
+        elements = new LinkedList<>();
         elements.add(null);     //just to make calculations easier, as algorithm uses previous rows
         targetMinionHealth = minionB.getHealth();
         targetMinionDamage = minionB.getAttack();
         mana = gameStateB.getManaCrystals();
-        elements = new LinkedList<>();
         int totalDamage = 0;
         for (CardB cardB : gameStateB.getMyHand()) {
             boolean addCard = false;
@@ -48,7 +48,8 @@ public class Table {
             if (addCard) elements.add(tradingElement);
         }
 
-        elements.add(new TradingElement(gameStateB.getMe().getHeroPowerB(), targetMinionDamage));
+        if (!gameStateB.getMe().getHeroPowerB().isUsed())
+            elements.add(new TradingElement(gameStateB.getMe().getHeroPowerB(), targetMinionDamage));
 
         for (MinionB minion : gameStateB.getMyTable()) {
             if (!minion.isUsed()) elements.add(new TradingElement(minion, targetMinionDamage));

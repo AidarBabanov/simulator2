@@ -8,17 +8,20 @@ public class AttackCommand implements Command {
     private TargetSource source;
     private int sourcePosition;
     private int targetPosition;
+    private String name;
 
-    public AttackCommand(TargetSource source, int sourcePosition, TargetSource target, int targetPosition) {
+    public AttackCommand(String name, TargetSource source, int sourcePosition, TargetSource target, int targetPosition) {
         this.setSource(source);
         this.setTarget(target);
         this.setSourcePosition(sourcePosition);
         this.setTargetPosition(targetPosition);
+        this.setName(name);
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", this.getName());
         jsonObject.addProperty("action", "attack");
         jsonObject.addProperty("source", source.toString().toLowerCase());
         if (source == TargetSource.MINION) {
@@ -66,6 +69,14 @@ public class AttackCommand implements Command {
 
     public void setTargetPosition(int targetPosition) {
         this.targetPosition = targetPosition;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public enum TargetSource {

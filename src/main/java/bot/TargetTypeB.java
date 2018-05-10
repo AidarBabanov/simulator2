@@ -202,7 +202,7 @@ public enum TargetTypeB {
 
     public static TargetTypeB defineTarget(JsonObject jsonEffect) {
         TargetTypeB targetType = null;
-        switch (jsonEffect.get("target").getAsString()) {
+        switch (jsonEffect.get("targetType").getAsString()) {
             case ("CHARACTER"):
                 targetType = TargetTypeB.CHARACTER;
                 break;

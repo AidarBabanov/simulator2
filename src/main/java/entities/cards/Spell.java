@@ -40,7 +40,7 @@ public class Spell extends Card {
         jsonCard.addProperty("currentManaCost", super.getCurrentManacost());
         jsonCard.addProperty("description", super.getDescription());
 //        System.out.println(this.getName());
-        jsonCard.add("spellEffect", this.getSpellEffect().jsonStateInformation());
+        jsonCard.add("spell", this.getSpellEffect().jsonStateInformation());
         return jsonCard;
     }
 

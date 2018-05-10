@@ -7,20 +7,23 @@ public class TargetCommand implements Command {
     private TargetSource target;
     private int position;
     private Owner owner;
+    private String name;
 
-    public TargetCommand(TargetSource target, Owner owner, int position){
+    public TargetCommand(String name, TargetSource target, Owner owner, int position) {
         this.setTarget(target);
         this.setOwner(owner);
         this.setPosition(position);
+        this.setName(name);
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", this.getName());
         jsonObject.addProperty("action", "target");
         jsonObject.addProperty("targetType", target.toString().toLowerCase());
         jsonObject.addProperty("owner", owner.toString().toLowerCase());
-        if(target==TargetSource.MINION){
+        if (target == TargetSource.MINION) {
             jsonObject.addProperty("tablePosition", position);
         }
 
@@ -56,11 +59,19 @@ public class TargetCommand implements Command {
         this.owner = owner;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public enum TargetSource {
         HERO, MINION
     }
 
-    public enum Owner{
+    public enum Owner {
         ME, OPPONENT
     }
 }

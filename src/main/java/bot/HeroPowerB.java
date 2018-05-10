@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 public class HeroPowerB extends CardB implements SimpleBot.DirectDamageCard {
     private SpellEffectB spellEffectB;
+    private boolean used;
 
     HeroPowerB(JsonObject jsonObject) {
         super(jsonObject);
@@ -27,5 +28,16 @@ public class HeroPowerB extends CardB implements SimpleBot.DirectDamageCard {
     @Override
     public int getDamage() {
         return spellEffectB.getDamage();
+    }
+
+
+    @Override
+    public boolean isUsed() {
+        return used;
+    }
+
+    @Override
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 }

@@ -110,7 +110,6 @@ public class Hero extends Card implements Target {
     public void getDamage(int damage) {
         this.setCurrentHealth(this.getCurrentHealth() - damage);
         if (this.getCurrentHealth() <= 0) this.die();
-        System.out.println(currentHealth+"SUKA YA TUT");
     }
 
     public int responseDamage() {

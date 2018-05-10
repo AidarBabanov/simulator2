@@ -54,8 +54,8 @@ public class PreGame implements State {
             if (!handled) player1.write("\"message\": \"Wrong command!|\"");
         } while (!handled);
 
-        player1.write(player1.toString());
-        player2.write(player2.toString());
+//        player1.write(player1.toString());
+//        player2.write(player2.toString());
 
         do {
             message = player2.read();

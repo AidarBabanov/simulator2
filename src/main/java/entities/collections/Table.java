@@ -20,8 +20,12 @@ public class Table extends LinkedList<Minion> {
     }
 
     public void summonMinion(Minion minion, int position) {
-        if (position > this.size()) position = this.size();
-        this.add(position, minion);
+        if (this.size() >= 7) {
+            player.write("\"message\":\"maximum number of minions\"");
+        } else {
+            if (position > this.size()) position = this.size();
+            this.add(position, minion);
+        }
     }
 
     public void killMinion(Minion minion) {
